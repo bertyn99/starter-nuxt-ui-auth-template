@@ -6,6 +6,6 @@ export default defineNuxtConfig({
       database: true,
     },
   },
-  modules: ["@nuxt/ui", "nuxt-auth-utils"],
+  modules: ["@nuxt/ui", "nuxt-auth-utils", "nuxt-security"],
   compatibilityDate: "2024-10-17",
 });

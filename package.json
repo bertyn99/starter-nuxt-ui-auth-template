@@ -18,6 +18,7 @@
     "auth-utils": "^1.0.0",
     "nuxt": "^3.12.4",
     "nuxt-auth-utils": "^0.4.4",
+    "nuxt-security": "^2.0.0",
     "prisma": "5.21.0"
   },
   "dependencies": {
