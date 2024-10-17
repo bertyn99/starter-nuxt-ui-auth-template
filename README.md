@@ -73,3 +73,10 @@ bun run preview
 ```
 
 Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+
+
+## Prisma Setup
+
+Prisma is a next-generation ORM that simplifies database management. This setup guide covers the steps for working with SQLite and PostgreSQL. Choose the database that best fits your project requirements.
+
+### Install Prisma
