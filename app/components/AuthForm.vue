@@ -1,8 +1,10 @@
 <script lang="ts" setup>
 import type { PropType } from "vue";
 import type { FormError, FormErrorEvent } from '#ui/types'
-import type { fieldType } from "@/types";
-import vine, { errors } from '@vinejs/vine'
+import type { fieldType } from "@/types"
+import { z } from 'zod'
+
+
 const emit = defineEmits(['error', 'submit'])
 const props = defineProps({
     title: {
@@ -76,32 +78,16 @@ function onSubmit() {
     emit('submit', state)
 }
 
-const schema = vine.object({
-    email: vine.string().email(),
-    password: vine
-        .string()
-        .minLength(4)
-        .maxLength(32)
+
+const schema = z.object({
+    email: z.string().email('Invalid email'),
+    password: z.string().min(8, 'Must be at least 8 characters')
 })
-const validate = async (state: any) => {
-    const errorsR: FormError[] = [];
-    try {
-        const validator = vine.compile(schema)
-        await validator.validate(
-            state
-        )
-    } catch (error) {
-        if (error instanceof errors.E_VALIDATION_ERROR) {
-            error.messages.forEach((message: any) => {
-                errorsR.push({
-                    path: message.field,
-                    message: message.message,
-                });
-            });
-        }
-    }
-    return errorsR;
-};
+
+type Schema = z.output<typeof schema>
+
+
+
 async function onError(event: FormErrorEvent) {
     console.log(event.errors);
     const element = document.getElementById(event.errors[0].id)
@@ -131,7 +117,7 @@ const hasMultipleProviders = computed(() => props.providers.length > 1);
                 </template>
             </div>
             <UDivider label="OR" />
-            <UForm ref="form" :state="state" class="space-y-6" @submit="onSubmit" :validate="validate" @error="onError">
+            <UForm ref="form" :state="state" class="space-y-6" @submit="onSubmit" :schema="schema" @error="onError">
                 <UFormGroup v-for="field in fields" :key="field.label" :label="field.label"
                     :name="field.label.toLowerCase()">
                     <UInput v-model="state[field.label.toLowerCase()]" :placeholder="field.placeholder"
