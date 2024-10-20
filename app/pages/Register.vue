@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import type { FormError } from '#ui/types'
 
+
+definePageMeta({
+    layout: "auth"
+})
 useSeoMeta({
     title: "Register",
 });
