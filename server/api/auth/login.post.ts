@@ -14,10 +14,10 @@ export default defineEventHandler(async (event) => {
     const { email, password } = body;
 
     if (!email || !password) {
-      console.error("Username or password missing");
+      console.error("Email or password missing");
       return createError({
         statusCode: 400,
-        statusMessage: "Username and password are required",
+        statusMessage: "Email and password are required",
       });
     }
 
@@ -30,10 +30,10 @@ export default defineEventHandler(async (event) => {
 
     // For security reasons, do not specify if username or password is incorrect
     if (!user || !(await argon2.verify(user.password, password))) {
-      console.error(`Invalid username or password for user: ${email}`);
+      console.error(`Invalid email or password for user: ${email}`);
       return createError({
         statusCode: 401,
-        statusMessage: "Invalid username or password",
+        statusMessage: "Invalid email or password",
       });
     } else {
       const userData = { username: user.name };

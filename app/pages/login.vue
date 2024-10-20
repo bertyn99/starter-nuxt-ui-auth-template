@@ -27,13 +27,15 @@ const loading = ref(false)
 async function onSubmit(form: any) {
   try {
     loading.value = true;
-
-    await $fetch("/api/auth/signup", {
+    console.log(form)
+    const user = await useRequestFetch()("/api/auth/login", {
       method: "POST",
-      body,
+      body: form,
     });
     loading.value = false;
-    navigateTo("/");
+    console.log(user)
+    if (user && user.success) navigateTo("/");
+
   } catch (error: a) {
     alert(error.statusMessage || error);
     loading.value = false;
