@@ -30,10 +30,26 @@ const fields = [
         placeholder: "Enter your password",
     },
 ];
+
+const loading = ref(false)
 async function onSubmit(form: any) {
     try {
 
+        try {
+            loading.value = true;
+            console.log(form)
+            const user = await useRequestFetch()("/api/auth/signup", {
+                method: "POST",
+                body: form,
+            });
+            loading.value = false;
+            console.log(user)
+            if (user && user.success) navigateTo("/");
 
+        } catch (error: a) {
+            alert(error.statusMessage || error);
+            loading.value = false;
+        }
     } catch (error) {
 
     }

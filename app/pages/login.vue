@@ -23,18 +23,26 @@ const fields = [
     placeholder: "Enter your password",
   },
 ];
+const { loggedIn, user, fetch } = useUserSession();
+
 const loading = ref(false)
 async function onSubmit(form: any) {
   try {
     loading.value = true;
     console.log(form)
-    const user = await useRequestFetch()("/api/auth/login", {
+    const userRes = await useRequestFetch()("/api/auth/login", {
       method: "POST",
       body: form,
     });
     loading.value = false;
     console.log(user)
-    if (user && user.success) navigateTo("/");
+
+    if (userRes && userRes.success) {
+      //load the user data in the client side 
+      await fetch()
+
+      navigateTo("/");
+    }
 
   } catch (error: a) {
     alert(error.statusMessage || error);

@@ -11,4 +11,11 @@ export default defineNuxtConfig({
   },
   modules: ["@nuxt/ui", "nuxt-auth-utils", "nuxt-security"],
   compatibilityDate: "2024-10-17",
+  runtimeConfig: {
+    cookie: {
+      httpOnly: true,
+      secure: true, //work with https
+      sameSite: "strict",
+    },
+  },
 });
