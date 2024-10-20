@@ -20,12 +20,20 @@ const fields = [
         placeholder: "Enter your password",
     },
 ];
+const loading = ref(false)
 async function onSubmit(form: any) {
     try {
+        loading.value = true;
 
-
-    } catch (error) {
-
+        await $fetch("/api/auth/signup", {
+            method: "POST",
+            body,
+        });
+        loading.value = false;
+        navigateTo("/");
+    } catch (error: a) {
+        alert(error.statusMessage || error);
+        loading.value = false;
     }
 
 
