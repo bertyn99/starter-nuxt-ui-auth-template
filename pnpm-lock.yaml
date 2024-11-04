@@ -29,8 +29,8 @@ devDependencies:
     specifier: ^3.12.4
     version: 3.13.2(vite@5.4.9)
   nuxt-auth-utils:
-    specifier: ^0.4.4
-    version: 0.4.4
+    specifier: ^0.5.1
+    version: 0.5.1
   nuxt-security:
     specifier: ^2.0.0
     version: 2.0.0
@@ -5180,11 +5180,11 @@ packages:
     hasBin: true
     dev: true
 
-  /nuxt-auth-utils@0.4.4:
-    resolution: {integrity: sha512-yAtxI4rSyQXcdBy5hQO1foLxigdsRSWdkrzcGSWEtg/+gafsqDikYMARPGWkdXshyu17wH60d+TjspqAnfsvIw==}
+  /nuxt-auth-utils@0.5.1:
+    resolution: {integrity: sha512-qolN5nWKbtBqQFrqYQXQY9OpR0m+RYxLIPw6QoTCH5oYqrxJAkKjRXwW+kbIeCkh+zpedWqmbOF6xf12i6hwGg==}
     peerDependencies:
-      '@simplewebauthn/browser': ^10.0.0
-      '@simplewebauthn/server': ^10.0.1
+      '@simplewebauthn/browser': ^11.0.0
+      '@simplewebauthn/server': ^11.0.0
     peerDependenciesMeta:
       '@simplewebauthn/browser':
         optional: true

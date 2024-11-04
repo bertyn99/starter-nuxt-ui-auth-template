@@ -18,4 +18,7 @@ export default defineNuxtConfig({
       sameSite: "strict",
     },
   },
+  security: {
+    csrf: true,
+  },
 });

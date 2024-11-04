@@ -24,16 +24,17 @@ const fields = [
   },
 ];
 const { loggedIn, user, fetch } = useUserSession();
-
+const { $csrfFetch } = useNuxtApp()
 const loading = ref(false)
 async function onSubmit(form: any) {
   try {
     loading.value = true;
     console.log(form)
-    const userRes = await useRequestFetch()("/api/auth/login", {
+    const { userRes } = await $csrfFetch("/api/auth/login", {
       method: "POST",
       body: form,
     });
+    console.log(userRes)
     loading.value = false;
     console.log(user)
 
@@ -44,7 +45,7 @@ async function onSubmit(form: any) {
       navigateTo("/");
     }
 
-  } catch (error: a) {
+  } catch (error: any) {
     alert(error.statusMessage || error);
     loading.value = false;
   }
