@@ -1,84 +1,71 @@
 <script setup lang="ts">
-import type { FormError } from '#ui/types'
-
+import * as z from 'zod'
+import type { FormSubmitEvent } from '@nuxt/ui'
 
 definePageMeta({
-    layout: "auth"
+    layout: 'auth'
 })
+
 useSeoMeta({
-    title: "Register",
-});
+    title: 'Sign up',
+    description: 'Create an account to get started'
+})
 
-const fields = [
-    {
-        name: "email",
-        type: "text",
-        label: "Email",
-        placeholder: "Enter your email",
+const toast = useToast()
 
-    },
-    {
-        name: "name",
-        label: "Name",
-        type: "text",
-        placeholder: "John Doe",
-    },
-    {
-        name: "password",
-        label: "Password",
-        type: "password",
-        placeholder: "Enter your password",
-    },
-];
+const fields = [{
+    name: 'name',
+    type: 'text' as const,
+    label: 'Name',
+    placeholder: 'Enter your name'
+}, {
+    name: 'email',
+    type: 'text' as const,
+    label: 'Email',
+    placeholder: 'Enter your email'
+}, {
+    name: 'password',
+    label: 'Password',
+    type: 'password' as const,
+    placeholder: 'Enter your password'
+}]
 
-const loading = ref(false)
-async function onSubmit(form: any) {
-    try {
-
-        try {
-            loading.value = true;
-            console.log(form)
-            const user = await useRequestFetch()("/api/auth/signup", {
-                method: "POST",
-                body: form,
-            });
-            loading.value = false;
-            console.log(user)
-            if (user && user.success) navigateTo("/");
-
-        } catch (error: a) {
-            alert(error.statusMessage || error);
-            loading.value = false;
-        }
-    } catch (error) {
-
+const providers = [{
+    label: 'Google',
+    icon: 'i-simple-icons-google',
+    onClick: () => {
+        toast.add({ title: 'Google', description: 'Login with Google' })
     }
+}, {
+    label: 'GitHub',
+    icon: 'i-simple-icons-github',
+    onClick: () => {
+        toast.add({ title: 'GitHub', description: 'Login with GitHub' })
+    }
+}]
 
+const schema = z.object({
+    name: z.string().min(1, 'Name is required'),
+    email: z.string().email('Invalid email'),
+    password: z.string().min(8, 'Must be at least 8 characters')
+})
 
+type Schema = z.output<typeof schema>
+
+function onSubmit(payload: FormSubmitEvent<Schema>) {
+    console.log('Submitted', payload)
 }
 </script>
 
-
 <template>
-    <UCard class="max-w-sm w-full bg-white/75 dark:bg-white/5 backdrop-blur">
-        <AuthForm :fields="fields" title="Connecter vous" align="top" icon="i-heroicons-lock-closed"
-            :ui="{ base: 'text-center', footer: 'text-center' }" submit-button="Sign-in" @submit="onSubmit">
-            <template #description>
-
-            </template>
-
-            <!-- <template #password-hint>
-        <NuxtLink to="/" class="text-primary font-medium"
-          >Forgot password?</NuxtLink
-        >
-      </template>
+    <UAuthForm :fields="fields" :schema="schema" :providers="providers" title="Create an account"
+        :submit="{ label: 'Create account' }" @submit="onSubmit">
+        <template #description>
+            Already have an account? <ULink to="/login" class="text-primary font-medium">Login</ULink>.
+        </template>
 
         <template #footer>
-        By signing in, you agree to our
-        <NuxtLink to="/" class="text-primary font-medium"
-          >Terms of Service</NuxtLink
-        >. </template
-      > -->
-        </AuthForm>
-    </UCard>
+            By signing up, you agree to our <ULink to="/" class="text-primary font-medium">Terms of Service</ULink>.
+        </template>
+    </UAuthForm>
 </template>

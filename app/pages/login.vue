@@ -1,80 +1,74 @@
 <script setup lang="ts">
-import type { FormError } from '#ui/types'
+import * as z from 'zod'
+import type { FormSubmitEvent } from '@nuxt/ui'
 
 definePageMeta({
-  layout: "auth"
+  layout: 'auth'
 })
+
 useSeoMeta({
-  title: "Login",
-});
+  title: 'Login',
+  description: 'Login to your account to continue'
+})
 
-const fields = [
-  {
-    name: "email",
-    type: "text",
-    label: "Email",
-    placeholder: "Enter your email",
+const toast = useToast()
 
-  },
-  {
-    name: "password",
-    label: "Password",
-    type: "password",
-    placeholder: "Enter your password",
-  },
-];
-const { loggedIn, user, fetch } = useUserSession();
-const { $csrfFetch } = useNuxtApp()
-const loading = ref(false)
-async function onSubmit(form: any) {
-  try {
-    loading.value = true;
-    console.log(form)
-    const { userRes } = await $csrfFetch("/api/auth/login", {
-      method: "POST",
-      body: form,
-    });
-    console.log(userRes)
-    loading.value = false;
-    console.log(user)
+const fields = [{
+  name: 'email',
+  type: 'text' as const,
+  label: 'Email',
+  placeholder: 'Enter your email',
+  required: true
+}, {
+  name: 'password',
+  label: 'Password',
+  type: 'password' as const,
+  placeholder: 'Enter your password'
+}, {
+  name: 'remember',
+  label: 'Remember me',
+  type: 'checkbox' as const
+}]
 
-    if (userRes && userRes.success) {
-      //load the user data in the client side 
-      await fetch()
-
-      navigateTo("/");
-    }
-
-  } catch (error: any) {
-    alert(error.statusMessage || error);
-    loading.value = false;
+const providers = [{
+  label: 'Google',
+  icon: 'i-simple-icons-google',
+  onClick: () => {
+    toast.add({ title: 'Google', description: 'Login with Google' })
   }
+}, {
+  label: 'GitHub',
+  icon: 'i-simple-icons-github',
+  onClick: () => {
+    toast.add({ title: 'GitHub', description: 'Login with GitHub' })
+  }
+}]
 
+const schema = z.object({
+  email: z.string().email('Invalid email'),
+  password: z.string().min(8, 'Must be at least 8 characters')
+})
 
+type Schema = z.output<typeof schema>
+
+function onSubmit(payload: FormSubmitEvent<Schema>) {
+  console.log('Submitted', payload)
 }
 </script>
 
-
 <template>
-  <UCard class="max-w-sm w-full bg-white/75 dark:bg-white/5 backdrop-blur">
-    <AuthForm :fields="fields" title="Connecter vous" align="top" icon="i-heroicons-lock-closed"
-      :ui="{ base: 'text-center', footer: 'text-center' }" submit-button="Sign-in" @submit="onSubmit">
-      <template #description>
+  <UAuthForm :fields="fields" :schema="schema" :providers="providers" title="Welcome back" icon="i-lucide-lock"
+    @submit="onSubmit">
+    <template #description>
+      Don't have an account? <ULink to="/signup" class="text-primary font-medium">Sign up</ULink>.
+    </template>
 
-      </template>
+    <template #password-hint>
+      <ULink to="/" class="text-primary font-medium" tabindex="-1">Forgot password?</ULink>
+    </template>
 
-      <!-- <template #password-hint>
-        <NuxtLink to="/" class="text-primary font-medium"
-          >Forgot password?</NuxtLink
-        >
-      </template>
-
-        <template #footer>
-        By signing in, you agree to our
-        <NuxtLink to="/" class="text-primary font-medium"
-          >Terms of Service</NuxtLink
-        >. </template
-      > -->
-    </AuthForm>
-  </UCard>
+    <template #footer>
+      By signing in, you agree to our <ULink to="/" class="text-primary font-medium">Terms of Service</ULink>.
+    </template>
+  </UAuthForm>
 </template>
