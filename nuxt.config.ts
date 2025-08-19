@@ -9,7 +9,7 @@ export default defineNuxtConfig({
   future: {
     compatibilityVersion: 4,
   },
-  modules: ["@nuxt/ui", "nuxt-auth-utils", "nuxt-security"],
+  modules: ["@nuxt/ui-pro", "nuxt-auth-utils", "nuxt-security"],
   compatibilityDate: "2024-10-17",
   runtimeConfig: {
     cookie: {
